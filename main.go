@@ -5,12 +5,6 @@ import (
 	"mileage-shop/src/menu"
 )
 
-type user struct {
-	name  string
-	point uint
-	cart  string
-}
-
 func newUser(name string) user {
 	d := user{
 		name, 1000000, "",
@@ -18,12 +12,19 @@ func newUser(name string) user {
 	return d
 }
 
-func main() {
-	user1 := newUser("박유진")
-	user2 := newUser("박수현")
-	user3 := newUser("박정숙")
+type user struct {
+	name  string
+	point uint
+	cart  string
+}
 
-	users := []user{}
+func main() {
+
+	var user1 = newUser("박유진")
+	var user2 = newUser("박수현")
+	var user3 = newUser("박정숙")
+
+	var users = []user{}
 	users = append(
 		users,
 		user1,
@@ -33,23 +34,6 @@ func main() {
 
 	for i := 0; i < len(users); i++ {
 		fmt.Printf("%v : %v\n", users[i].name, users[i].point)
-	}
-
-	type item struct {
-		id     int
-		name   string
-		point  uint
-		amount int
-	}
-	//Go 언어에서 슬라이스는 참조 타입입니다. 여기에만 * 붙여주면 된대. 쓰려는 곳에 & 이거 안붙여줘도 된다는데 뮤슨말?
-	//그럼 밑에 value에서는 새 값이 나타난거잖아 for range 안에서?
-	//*이걸 적어줌으로써 value도 items의 값을 참조하게 되고 그 참조한 값으로 값을 변경해줘서 바뀌는건가?
-	items := []*item{
-		{1, "텀블러", 10000, 30},
-		{2, "롱패딩", 500000, 20},
-		{3, "투미 백팩", 400000, 20},
-		{4, "나이키 운동화", 150000, 50},
-		{5, "빼빼로", 1200, 500},
 	}
 
 	var inputMenu int
@@ -67,8 +51,8 @@ func main() {
 		switch inputMenu {
 		case 1:
 			fmt.Println("구매")
-			for _, value := range items {
-				fmt.Printf("물품%v : %v, 가격: %v원, 잔여 수량: %v\n", value.id, value.name, value.point, value.amount)
+			for _, value := range menu.Items {
+				fmt.Printf("물품%v : %v, 가격: %v원, 잔여 수량: %v\n", value.Id, value.Name, value.Point, value.Amount)
 			}
 			var num int
 
@@ -90,14 +74,14 @@ func main() {
 				}
 			}
 			fmt.Printf("구매할 상품 : %v\n", num)
-			for _, value := range items {
-				if num == value.id {
-					if value.amount > 0 && users[0].point >= value.point {
-						users[0].point -= value.point
-						value.amount--
+			for _, value := range menu.Items {
+				if num == value.Id {
+					if value.Amount > 0 && users[0].point >= value.Point {
+						users[0].point -= value.Point
+						value.Amount--
 						//items[index].amount-- 포인터 안만들었을 때
 						fmt.Println("구매가 완료되었습니다.")
-					} else if value.amount < 0 {
+					} else if value.Amount < 0 {
 						fmt.Println("잔여 수량이 부족하여 구매가 불가능합니다.")
 					} else {
 						fmt.Println("보유 포인트가 부족하여 구매가 불가능합니다.")
@@ -105,13 +89,9 @@ func main() {
 				}
 			}
 		case 2:
-			fmt.Println("잔여 수량 확인")
-			for _, value := range items {
-				fmt.Printf("%v의 잔여 수량은 %v입니다.", value.name, value.amount)
-			}
+			menu.RemainingAmount()
 		case 3:
-			fmt.Println("잔여 마일리지 확인")
-			fmt.Printf("%v님의 잔여 마일리지는 %v점 입니다.", users[0].name, users[0].point)
+			menu.RemainingMileage(users[0].name, users[0].point)
 		case 4:
 			menu.DeliveryStatus()
 		case 5:
