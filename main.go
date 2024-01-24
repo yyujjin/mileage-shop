@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"mileage-shop/src/menu"
 )
 
 type user struct {
@@ -51,7 +52,7 @@ func main() {
 		{5, "빼빼로", 1200, 500},
 	}
 
-	var menu int
+	var inputMenu int
 
 	for {
 		fmt.Println(
@@ -62,8 +63,8 @@ func main() {
 				"4.배송 상태 확인\n" +
 				"5.장바구니 확인\n" +
 				"6.프로그램 종료")
-		fmt.Scan(&menu)
-		switch menu {
+		fmt.Scan(&inputMenu)
+		switch inputMenu {
 		case 1:
 			fmt.Println("구매")
 			for _, value := range items {
@@ -112,11 +113,11 @@ func main() {
 			fmt.Println("잔여 마일리지 확인")
 			fmt.Printf("%v님의 잔여 마일리지는 %v점 입니다.", users[0].name, users[0].point)
 		case 4:
-			fmt.Println("배송 상태 확인")
+			menu.DeliveryStatus()
 		case 5:
-			fmt.Println("장바구니 확인")
+			menu.CheckCart()
 		case 6:
-			fmt.Println("프로그램 종료")
+			menu.ExitProgram()
 			return
 		default:
 			fmt.Println("잘못된 입력입니다. 1~6까지의 숫자를 입력해 주세요.")
