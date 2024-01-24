@@ -6,7 +6,7 @@ import (
 
 type user struct {
 	name  string
-	point int
+	point uint
 	cart  string
 }
 
@@ -37,7 +37,7 @@ func main() {
 	type item struct {
 		id     int
 		name   string
-		point  int
+		point  uint
 		amount int
 	}
 	//Go 언어에서 슬라이스는 참조 타입입니다. 여기에만 * 붙여주면 된대. 쓰려는 곳에 & 이거 안붙여줘도 된다는데 뮤슨말?
@@ -91,15 +91,16 @@ func main() {
 			fmt.Printf("구매할 상품 : %v\n", num)
 			for _, value := range items {
 				if num == value.id {
-					if value.amount > 0 {
+					if value.amount > 0 && users[0].point >= value.point {
 						users[0].point -= value.point
 						value.amount--
 						//items[index].amount-- 포인터 안만들었을 때
 						fmt.Println("구매가 완료되었습니다.")
-					} else {
+					} else if value.amount < 0 {
 						fmt.Println("잔여 수량이 부족하여 구매가 불가능합니다.")
+					} else {
+						fmt.Println("보유 포인트가 부족하여 구매가 불가능합니다.")
 					}
-
 				}
 			}
 		case 2:
