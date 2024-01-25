@@ -2,8 +2,6 @@ package menu
 
 import "fmt"
 
-// 구조체 자체도 main.go에서 쓰려면 대문자로 바꿔줘야 함
-// 하지만 main.go에서 필드를 사용하려면 필드도 대문자로 고쳐줘야함
 type Item struct {
 	Id     int
 	Name   string
@@ -52,7 +50,6 @@ func Purchase(users ...User) {
 			if value.Amount > 0 && users[0].Point >= value.Point {
 				users[0].Point -= value.Point
 				value.Amount--
-				//items[index].amount-- 포인터 안만들었을 때
 				fmt.Println("구매가 완료되었습니다.")
 			} else if value.Amount < 0 {
 				fmt.Println("잔여 수량이 부족하여 구매가 불가능합니다.")
@@ -86,9 +83,3 @@ func CheckCart() {
 func ExitProgram() {
 	fmt.Println("프로그램 종료")
 }
-
-//패키지를 사용해서 따로 빼두는 이유는 관련있는 함수나 변수끼리 모아두기 위해서
-//함수가 너무 길어지면 나중에 유지보수가 힘들어서 main함수밖에 있는걸 따로 정리해두는 것
-//새로 만든 패키지에서 전역변수로 대문자로 선언해야 main함수에서 인식하고 쓸수있음
-//main.go에 있는 정보를 새로만든 패키지로 넘기려면 매개변수로 넘길수있고
-//새로만든 패키지에서 대문자로 쓰면 main.go에서 사요되는거임
