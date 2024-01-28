@@ -3,10 +3,12 @@ package main
 import (
 	"fmt"
 	"mileage-shop/src/menu"
+	"mileage-shop/src/product"
+	"mileage-shop/src/user"
 )
 
-func newUser(name string) menu.User {
-	d := menu.User{
+func newUser(name string) user.User {
+	d := user.User{
 		name, 1000000, "",
 	}
 	return d
@@ -18,7 +20,7 @@ func main() {
 	var user2 = newUser("박수현")
 	var user3 = newUser("박정숙")
 
-	var users = []menu.User{}
+	var users = []user.User{}
 	users = append(
 		users,
 		user1,
@@ -32,6 +34,9 @@ func main() {
 
 	var inputMenu int
 
+	// 패키지를 분리하는 이유? 유지보수가 편함!
+	// 몇개의 패키지로 분리해야 하지?
+	// 구매 (+ 배송상태 확인), 장바구니, 사용자(마일리지) // 만들고 없애고 반복할수 있음 -> 리팩토링한다.
 	for {
 		fmt.Println(
 			"메뉴의 번호를 입력하세요.\n" +
@@ -46,7 +51,7 @@ func main() {
 
 		switch inputMenu {
 		case 1:
-			menu.Purchase(users...)
+			product.Purchase(users...)
 		case 2:
 			menu.RemainingAmount()
 		case 3:
