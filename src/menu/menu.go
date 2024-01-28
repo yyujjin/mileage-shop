@@ -17,6 +17,8 @@ var Items = []*Item{
 	{5, "빼빼로", 1200, 500},
 }
 
+var Cart []Item
+
 type User struct {
 	Name  string
 	Point uint
@@ -45,9 +47,23 @@ func Purchase(users ...User) {
 		}
 	}
 	fmt.Printf("구매할 상품 : %v\n", num)
+	// 바로 구매? 지금 그대로. 장바구니에 담기? 장바구니에 추가하고 추가되었습니다. 무조건 하나씩만 구매 가능
+	// 장바구니에 있는 물품 목록을 출력.
 	for _, value := range Items {
 		if num == value.Id {
 			if value.Amount > 0 && users[0].Point >= value.Point {
+				for {
+					var isPutCart int
+					fmt.Println("원하시는 번호를 입력하세요. 1.바로 구매 2.장바구니에 담기")
+					fmt.Scan(&isPutCart)
+					if isPutCart == 1 {
+						break
+					} else {
+						fmt.Println("장바구니에 추가되었습니다.")
+						Cart = append(Cart, Item{value.Id, value.Name, value.Point, 1})
+						return
+					}
+				}
 				users[0].Point -= value.Point
 				value.Amount--
 				fmt.Println("구매가 완료되었습니다.")
@@ -78,6 +94,7 @@ func DeliveryStatus() {
 
 func CheckCart() {
 	fmt.Println("장바구니 확인")
+	fmt.Println(Cart)
 }
 
 func ExitProgram() {
