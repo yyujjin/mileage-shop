@@ -20,7 +20,13 @@ var Items = []*Item{
 	{5, "빼빼로", 1200, 500},
 }
 
-// 구매 메뉴에서 이미 장바구니에 담긴 상품을 다시 담을 경우 수량 늘리기
+type CartItem struct {
+	id     int
+	amount int
+}
+
+var Cart []CartItem
+
 func Purchase(users ...user.User) {
 	fmt.Println("구매")
 	for _, value := range Items {
@@ -43,28 +49,34 @@ func Purchase(users ...user.User) {
 		}
 	}
 	fmt.Printf("구매할 상품 : %v\n", num)
-	// 바로 구매? 지금 그대로. 장바구니에 담기? 장바구니에 추가하고 추가되었습니다. 무조건 하나씩만 구매 가능
+
 	// 장바구니에 있는 물품 목록을 출력.
 	for _, value := range Items {
 		if num == value.Id {
 			if value.Amount > 0 && users[0].Point >= value.Point {
-				for {
-					var isPutCart int
-					fmt.Println("원하시는 번호를 입력하세요. 1.바로 구매 2.장바구니에 담기 (구매를 취소하려면 0번을 누르세요.")
-					fmt.Scan(&isPutCart)
-					if isPutCart == 1 {
-						break
-					} else if isPutCart == 2 {
-						fmt.Println("장바구니에 추가되었습니다.")
+				var isPutCart int
+				fmt.Println("원하시는 번호를 입력하세요. 1.바로 구매 2.장바구니에 담기 (구매를 취소하려면 0번을 누르세요.")
+				fmt.Scan(&isPutCart)
+				switch isPutCart {
+				case 1:
+					PurchaseItem(&users[0], value)
+				case 2:
+					if len(Cart) == 0 { // len(Cart) < 0 -> 이건 안돼
 						Cart = append(Cart, CartItem{value.Id, 1})
-						return
 					} else {
-						return
+						for _, CartValue := range Cart {
+							if CartValue.id == value.Id {
+								fmt.Println(CartValue.id, value.Id)
+								CartValue.amount += 1
+							} else {
+								Cart = append(Cart, CartItem{value.Id, 1})
+							}
+						}
 					}
+					fmt.Println("장바구니에 추가되었습니다.")
+				case 0:
+					return
 				}
-				users[0].Point -= value.Point
-				value.Amount--
-				fmt.Println("구매가 완료되었습니다.")
 			} else if value.Amount < 0 {
 				fmt.Println("잔여 수량이 부족하여 구매가 불가능합니다.")
 			} else {
@@ -84,14 +96,14 @@ func DeliveryStatus() {
 	fmt.Println("배송 상태 확인")
 }
 
-type CartItem struct {
-	id     int
-	amount int
-}
-
-var Cart []CartItem
-
 func CheckCart() {
 	fmt.Println("장바구니 확인")
 	fmt.Println(Cart)
+}
+
+// 포인터를 사용하지 않으면 함수가 실행될 때 안에서만 실행돼서 포인터로 바꿔줘야함
+func PurchaseItem(user *user.User, value *Item) {
+	user.Point -= value.Point
+	value.Amount--
+	fmt.Println("구매가 완료되었습니다.")
 }
