@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"mileage-shop/src/menu"
 	"mileage-shop/src/product"
 	"mileage-shop/src/user"
 )
@@ -12,6 +11,10 @@ func newUser(name string) user.User {
 		name, 1000000, "",
 	}
 	return d
+}
+
+func ExitProgram() {
+	fmt.Println("프로그램 종료")
 }
 
 func main() {
@@ -53,15 +56,15 @@ func main() {
 		case 1:
 			product.Purchase(users...)
 		case 2:
-			menu.RemainingAmount()
+			product.RemainingAmount()
 		case 3:
-			menu.RemainingMileage(users[0].Name, users[0].Point)
+			user.RemainingMileage(users[0].Name, users[0].Point)
 		case 4:
-			menu.DeliveryStatus()
+			product.DeliveryStatus()
 		case 5:
-			menu.CheckCart()
+			product.CheckCart()
 		case 6:
-			menu.ExitProgram()
+			ExitProgram()
 			return
 		default:
 			fmt.Println("잘못된 입력입니다. 1~6까지의 숫자를 입력해 주세요.")

@@ -20,8 +20,7 @@ var Items = []*Item{
 	{5, "빼빼로", 1200, 500},
 }
 
-var Cart []Item
-
+// 구매 메뉴에서 이미 장바구니에 담긴 상품을 다시 담을 경우 수량 늘리기
 func Purchase(users ...user.User) {
 	fmt.Println("구매")
 	for _, value := range Items {
@@ -33,7 +32,7 @@ func Purchase(users ...user.User) {
 	fmt.Scan(&num)
 	if num < 1 || num > 5 {
 		for {
-			fmt.Println("잘못된 입력입니다. 1~5까지의 숫자를 입력해주세요.(메뉴로 돌아가려면 0번을 누르세요)")
+			fmt.Println("잘못된 입력입니다. 1~5까지의 숫자를 입력해주세요.(메뉴로 돌아가려면 0번을 누르세요.)")
 			fmt.Scan(&num)
 			if num >= 1 && num <= 5 {
 				break
@@ -51,13 +50,15 @@ func Purchase(users ...user.User) {
 			if value.Amount > 0 && users[0].Point >= value.Point {
 				for {
 					var isPutCart int
-					fmt.Println("원하시는 번호를 입력하세요. 1.바로 구매 2.장바구니에 담기")
+					fmt.Println("원하시는 번호를 입력하세요. 1.바로 구매 2.장바구니에 담기 (구매를 취소하려면 0번을 누르세요.")
 					fmt.Scan(&isPutCart)
 					if isPutCart == 1 {
 						break
-					} else {
+					} else if isPutCart == 2 {
 						fmt.Println("장바구니에 추가되었습니다.")
-						Cart = append(Cart, Item{value.Id, value.Name, value.Point, 1})
+						Cart = append(Cart, CartItem{value.Id, 1})
+						return
+					} else {
 						return
 					}
 				}
@@ -71,4 +72,26 @@ func Purchase(users ...user.User) {
 			}
 		}
 	}
+}
+func RemainingAmount() {
+	fmt.Println("잔여 수량 확인")
+	for _, value := range Items {
+		fmt.Printf("%v의 잔여 수량은 %v입니다.\n", value.Name, value.Amount)
+	}
+}
+
+func DeliveryStatus() {
+	fmt.Println("배송 상태 확인")
+}
+
+type CartItem struct {
+	id     int
+	amount int
+}
+
+var Cart []CartItem
+
+func CheckCart() {
+	fmt.Println("장바구니 확인")
+	fmt.Println(Cart)
 }
