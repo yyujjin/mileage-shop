@@ -97,24 +97,25 @@ func PurchaseItem(user *user.User, value *Item) {
 }
 
 func PutToCart(itemId int) {
-	if len(Cart) == 0 { // len(Cart) < 0 -> 이건 안돼 배열길이는 0보다 작을수없음 0이 최소임 <= 이렇게하거나
+	foundIndex := findItem(itemId)
+	if foundIndex == -1 {
 		Cart = append(Cart, CartItem{itemId, 1})
 	} else {
-		isFound := false
-		var foundIndex int // flag 변수, 폴스가 못찾음
+		Cart[foundIndex].amount += 1
+	}
+
+	fmt.Println("장바구니에 추가되었습니다.")
+}
+
+func findItem(itemId int) int {
+	foundIndex := -1 // flag 변수, 폴스가 못찾음
+	//for range는 요소의 길이만큼 반복하고 첨부터 끝까지 하나씩 요소가 대입되면서 반복함
+	for index := range Cart { //for range를 쓰면 전역변수라도 값이 복사된거임
 		//for range는 요소의 길이만큼 반복하고 첨부터 끝까지 하나씩 요소가 대입되면서 반복함
-		for index := range Cart { //for range를 쓰면 전역변수라도 값이 복사된거임
-			if Cart[index].id == itemId {
-				isFound = true
-				foundIndex = index
-				break
-			}
-		}
-		if isFound == false {
-			Cart = append(Cart, CartItem{itemId, 1})
-		} else {
-			Cart[foundIndex].amount += 1
+		if Cart[index].id == itemId {
+			foundIndex = index
+			break
 		}
 	}
-	fmt.Println("장바구니에 추가되었습니다.")
+	return foundIndex
 }
