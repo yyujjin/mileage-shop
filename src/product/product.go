@@ -84,9 +84,38 @@ func DeliveryStatus() {
 	fmt.Println("배송 상태 확인")
 }
 
-func CheckCart() {
+// 장바구니에 들어가면 구매할지 뒤로갈지 선택 가능.
+func CheckCart(users ...user.User) { //... 안하니까 안됐음
 	fmt.Println("장바구니 확인")
 	fmt.Println(Cart)
+	fmt.Println("구매를 원하시면 1 , 메뉴로 돌아가려면 0번을 누르세요.")
+	var num int
+	fmt.Scan(&num)
+	switch num {
+	case 1:
+		fmt.Println("구매를 원하시는 ID를 입력하세요")
+		var selectedItem int
+		fmt.Scan(&selectedItem)
+		for _, value := range Items {
+			if selectedItem == value.Id {
+				if value.Amount > 0 && users[0].Point >= value.Point {
+					PurchaseItem(&users[0], value)
+					foundItem := findItem(selectedItem)
+					Cart = append(Cart[:foundItem], Cart[foundItem+1:]...)
+				} else if value.Amount < 0 {
+					fmt.Println("잔여 수량이 부족하여 구매가 불가능합니다.")
+					return
+				} else {
+					fmt.Println("보유 포인트가 부족하여 구매가 불가능합니다.")
+					return
+				}
+			}
+		}
+
+	case 0:
+		return
+	}
+
 }
 
 // 포인터를 사용하지 않으면 함수가 실행될 때 안에서만 실행돼서 포인터로 바꿔줘야함

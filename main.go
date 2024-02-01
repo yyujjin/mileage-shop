@@ -62,7 +62,7 @@ func main() {
 		case 4:
 			product.DeliveryStatus()
 		case 5:
-			product.CheckCart()
+			product.CheckCart(users[0])
 		case 6:
 			ExitProgram()
 			return
