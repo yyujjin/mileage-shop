@@ -36,10 +36,6 @@ func main() {
 	}
 
 	var inputMenu int
-
-	// 패키지를 분리하는 이유? 유지보수가 편함!
-	// 몇개의 패키지로 분리해야 하지?
-	// 구매 (+ 배송상태 확인), 장바구니, 사용자(마일리지) // 만들고 없애고 반복할수 있음 -> 리팩토링한다.
 	for {
 		fmt.Println(
 			"메뉴의 번호를 입력하세요.\n" +
@@ -62,7 +58,7 @@ func main() {
 		case 4:
 			product.DeliveryStatus()
 		case 5:
-			product.CheckCart(users[0])
+			product.CheckCart(users)
 		case 6:
 			ExitProgram()
 			return

@@ -85,17 +85,34 @@ func DeliveryStatus() {
 }
 
 // 장바구니에 들어가면 구매할지 뒤로갈지 선택 가능.
-func CheckCart(users ...user.User) { //... 안하니까 안됐음
+func CheckCart(users []user.User) {
 	fmt.Println("장바구니 확인")
 	fmt.Println(Cart)
-	fmt.Println("구매를 원하시면 1 , 메뉴로 돌아가려면 0번을 누르세요.")
 	var num int
-	fmt.Scan(&num)
+	for {
+		fmt.Println("구매를 원하시면 1번 , 메뉴로 돌아가려면 0번을 누르세요.")
+		fmt.Scan(&num)
+		if num == 1 || num == 0 {
+			break
+		}
+	}
+
 	switch num {
 	case 1:
-		fmt.Println("구매를 원하시는 ID를 입력하세요")
 		var selectedItem int
-		fmt.Scan(&selectedItem)
+		for {
+			fmt.Println("구매를 원하시는 제품의 ID를 입력하세요 (메뉴로 돌아가려면 0번을 누르세요.) ")
+			fmt.Scan(&selectedItem)
+			if selectedItem == 0 {
+				return
+			}
+			foundItem := findItem(selectedItem)
+			if foundItem == -1 {
+				fmt.Println("입력하신 ID가 장바구니에 존재하지 않습니다.")
+			} else {
+				break
+			}
+		}
 		for _, value := range Items {
 			if selectedItem == value.Id {
 				if value.Amount > 0 && users[0].Point >= value.Point {
@@ -118,7 +135,6 @@ func CheckCart(users ...user.User) { //... 안하니까 안됐음
 
 }
 
-// 포인터를 사용하지 않으면 함수가 실행될 때 안에서만 실행돼서 포인터로 바꿔줘야함
 func PurchaseItem(user *user.User, value *Item) {
 	user.Point -= value.Point
 	value.Amount--
@@ -137,10 +153,8 @@ func PutToCart(itemId int) {
 }
 
 func findItem(itemId int) int {
-	foundIndex := -1 // flag 변수, 폴스가 못찾음
-	//for range는 요소의 길이만큼 반복하고 첨부터 끝까지 하나씩 요소가 대입되면서 반복함
-	for index := range Cart { //for range를 쓰면 전역변수라도 값이 복사된거임
-		//for range는 요소의 길이만큼 반복하고 첨부터 끝까지 하나씩 요소가 대입되면서 반복함
+	foundIndex := -1
+	for index := range Cart {
 		if Cart[index].id == itemId {
 			foundIndex = index
 			break
