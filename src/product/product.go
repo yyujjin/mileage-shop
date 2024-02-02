@@ -28,7 +28,6 @@ type CartItem struct {
 
 var Cart []CartItem
 
-// 구매수량입력가능하게
 func Purchase(users ...user.User) {
 	fmt.Println("구매")
 	for _, value := range Items {
@@ -52,7 +51,6 @@ func Purchase(users ...user.User) {
 	}
 	fmt.Printf("구매할 상품 : %v\n", num)
 
-	// 장바구니에 있는 물품 목록을 출력.
 	for _, value := range Items {
 		if num == value.Id {
 			if value.Amount > 0 && users[0].Point >= value.Point {
@@ -137,9 +135,21 @@ func CheckCart(users []user.User) {
 }
 
 func PurchaseItem(user *user.User, value *Item) {
-	fmt.Println("구매 할 수량을 입력하세요")
 	var amount int
-	fmt.Scan(&amount)
+	for {
+		fmt.Println("구매 할 수량을 입력하세요")
+		fmt.Scan(&amount)
+		if amount > value.Amount {
+			fmt.Printf("현재 %v의 잔여 수량은 %v입니다. %v이하의 숫자를 입력해 주세요.(구매 취소는 0번을 입력하세요.)\n", value.Name, value.Amount, value.Amount)
+		} else if user.Point < amount*value.Point {
+			fmt.Printf("보유 포인트가 부족하여 구매가 불가능합니다. 현재 고객님의 보유 포인트는 %v입니다.(구매 취소는 0번을 입력하세요.)\n", user.Point)
+		} else if amount == 0 {
+			fmt.Println("구매가 취소되었습니다.")
+			return
+		} else {
+			break
+		}
+	}
 	user.Point -= amount * value.Point
 	value.Amount -= amount
 	fmt.Println("구매가 완료되었습니다.")
