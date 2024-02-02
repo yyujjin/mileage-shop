@@ -8,7 +8,7 @@ import (
 type Item struct {
 	Id     int
 	Name   string
-	Point  uint
+	Point  int
 	Amount int
 }
 
@@ -28,6 +28,7 @@ type CartItem struct {
 
 var Cart []CartItem
 
+// 구매수량입력가능하게
 func Purchase(users ...user.User) {
 	fmt.Println("구매")
 	for _, value := range Items {
@@ -66,7 +67,7 @@ func Purchase(users ...user.User) {
 				case 0:
 					return
 				}
-			} else if value.Amount < 0 {
+			} else if value.Amount == 0 { //value.Amount < 0 이렇게는 안되던데 왜?
 				fmt.Println("잔여 수량이 부족하여 구매가 불가능합니다.")
 			} else {
 				fmt.Println("보유 포인트가 부족하여 구매가 불가능합니다.")
@@ -136,8 +137,11 @@ func CheckCart(users []user.User) {
 }
 
 func PurchaseItem(user *user.User, value *Item) {
-	user.Point -= value.Point
-	value.Amount--
+	fmt.Println("구매 할 수량을 입력하세요")
+	var amount int
+	fmt.Scan(&amount)
+	user.Point -= amount * value.Point
+	value.Amount -= amount
 	fmt.Println("구매가 완료되었습니다.")
 }
 
